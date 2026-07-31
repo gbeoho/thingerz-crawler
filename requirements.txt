@@ -1,0 +1,5 @@
+# Thingerz Content Crawler dependencies
+# Pure Python stdlib — no external dependencies needed for basic functionality
+# Optional: requests, beautifulsoup4 for improved scraping
+# requests>=2.31.0
+# beautifulsoup4>=4.12.0

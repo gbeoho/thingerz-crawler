@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thingerz Content Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-soft: #101019;
+      --panel: #13131d;
+      --border: #22222f;
+      --text: #e6e6f0;
+      --text-dim: #8a8aa3;
+      --accent: #7c5cff;
+      --accent-soft: rgba(124, 92, 255, 0.14);
+      --green: #34d399;
+      --amber: #fbbf24;
+      --red: #f87171;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang HK",
+        "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 24px 28px 60px; }
+
+    /* Header */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap; margin-bottom: 24px;
+    }
+    header h1 {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
+    }
+    header h1 .dot { color: var(--accent); }
+    .last-run {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12.5px; color: var(--text-dim);
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 999px; padding: 7px 14px;
+    }
+    .last-run .pulse {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 8px rgba(52, 211, 153, 0.7);
+    }
+    .last-run .pulse.off { background: var(--text-dim); box-shadow: none; }
+
+    /* KPI cards */
+    .kpis {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px; margin-bottom: 24px;
+    }
+    .kpi {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px;
+    }
+    .kpi .label { font-size: 12.5px; color: var(--text-dim); margin-bottom: 8px; }
+    .kpi .value {
+      font-size: 30px; font-weight: 700; letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    .kpi .value span { color: var(--accent); }
+
+    /* Charts grid */
+    .charts {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 14px; margin-bottom: 24px;
+    }
+    .card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px;
+    }
+    .card h2 {
+      font-size: 13.5px; font-weight: 600; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;
+    }
+    .card .chart-box { position: relative; height: 260px; }
+
+    /* Filters */
+    .filters {
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
+      margin-bottom: 18px;
+    }
+    .filters .field { display: flex; flex-direction: column; gap: 6px; }
+    .filters label { font-size: 11.5px; color: var(--text-dim); }
+    select, input[type="text"] {
+      background: var(--bg-soft); color: var(--text);
+      border: 1px solid var(--border); border-radius: 9px;
+      padding: 9px 12px; font-size: 13.5px; font-family: inherit;
+      outline: none; min-width: 150px;
+    }
+    select:focus, input[type="text"]:focus { border-color: var(--accent); }
+    select option { background: var(--bg-soft); }
+    input[type="text"] { min-width: 200px; }
+
+    /* Items table */
+    .table-card { overflow: hidden; }
+    .table-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 4px;
+    }
+    .table-head h2 { margin: 0; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      text-align: left; font-size: 11.5px; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      padding: 10px 12px; border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg-soft); }
+    td { padding: 10px 12px; font-size: 13px; vertical-align: middle; }
+    .thumb {
+      width: 48px; height: 48px; border-radius: 8px; object-fit: cover;
+      background: var(--bg-soft); border: 1px solid var(--border);
+    }
+    .thumb.ph {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-dim); font-size: 18px;
+    }
+    .item-title {
+      font-weight: 600; display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden; max-width: 340px;
+    }
+    .item-title:hover { color: var(--accent); }
+    .item-author { font-size: 12px; color: var(--text-dim); margin-top: 3px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .badge {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+    }
+    .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .score { font-weight: 700; }
+    .score.hi { color: var(--green); }
+    .score.mid { color: var(--amber); }
+    .score.lo { color: var(--red); }
+    .muted { color: var(--text-dim); }
+    .empty, .loading {
+      text-align: center; padding: 48px 16px; color: var(--text-dim); font-size: 14px;
+    }
+    .spinner {
+      width: 22px; height: 22px; margin: 0 auto 10px;
+      border: 2px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Pagination */
+    .pagination {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 14px 4px 0; flex-wrap: wrap;
+    }
+    .pagination .info { font-size: 13px; color: var(--text-dim); }
+    .pagination button {
+      background: var(--bg-soft); color: var(--text);
+      border: 1px solid var(--border); border-radius: 9px;
+      padding: 8px 16px; font-size: 13px; cursor: pointer; font-family: inherit;
+    }
+    .pagination button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .pagination button:disabled { opacity: 0.35; cursor: not-allowed; }
+    .pagination .btns { display: flex; gap: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Header -->
+    <header>
+      <h1>Thingerz <span class="dot">·</span> Content Dashboard</h1>
+      <span class="last-run"><span class="pulse off" id="pulse"></span>
+        <span id="lastRunText">Last run: —</span></span>
+    </header>
+
+    <!-- KPI cards -->
+    <section class="kpis">
+      <div class="kpi"><div class="label">Total Items</div><div class="value"><span id="kpiTotal">–</span></div></div>
+      <div class="kpi"><div class="label">Sub-categories</div><div class="value"><span id="kpiCats">–</span></div></div>
+      <div class="kpi"><div class="label">Districts</div><div class="value"><span id="kpiDistricts">–</span></div></div>
+      <div class="kpi"><div class="label">Platforms</div><div class="value"><span id="kpiPlatforms">–</span></div></div>
+    </section>
+
+    <!-- Charts -->
+    <section class="charts">
+      <div class="card">
+        <h2>Items per Platform</h2>
+        <div class="chart-box"><canvas id="chartPlatforms"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Top Districts</h2>
+        <div class="chart-box"><canvas id="chartDistricts"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Items per Category</h2>
+        <div class="chart-box"><canvas id="chartCategories"></canvas></div>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters">
+      <div class="field">
+        <label for="fPlatform">Platform</label>
+        <select id="fPlatform"><option value="">All platforms</option></select>
+      </div>
+      <div class="field">
+        <label for="fDistrict">District</label>
+        <select id="fDistrict"><option value="">All districts</option></select>
+      </div>
+      <div class="field">
+        <label for="fCategory">Sub-category</label>
+        <select id="fCategory"><option value="">All sub-categories</option></select>
+      </div>
+      <div class="field">
+        <label for="fQ">Search</label>
+        <input type="text" id="fQ" placeholder="Search title / description…" />
+      </div>
+      <div class="field">
+        <label for="fLimit">Limit</label>
+        <select id="fLimit">
+          <option value="20" selected>20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Items table -->
+    <section class="card table-card">
+      <div class="table-head">
+        <h2>Latest Content</h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Platform</th>
+            <th>District</th>
+            <th>Sub-category</th>
+            <th>Views</th>
+            <th>Likes</th>
+            <th>Score</th>
+            <th>Fetched</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div id="tableState" class="loading"><div class="spinner"></div>Loading content…</div>
+      <div class="pagination">
+        <span class="info" id="pageInfo">Showing 0–0 of 0</span>
+        <div class="btns">
+          <button id="btnPrev">← Prev</button>
+          <button id="btnNext">Next →</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ── Small helpers ─────────────────────────────────────────────
+    const $ = (id) => document.getElementById(id);
+    const fmt = (n) => (n == null ? "–" : Number(n).toLocaleString());
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    // Platform display names + badge colors (reused across the UI).
+    const PLATFORMS = {
+      youtube:     { label: "YouTube",   color: "#ff5e5e" },
+      bilibili:    { label: "Bilibili",  color: "#00a1d6" },
+      instagram:   { label: "Instagram", color: "#e4405f" },
+      douyin:      { label: "抖音",       color: "#25f4ee" },
+      threads:     { label: "Threads",   color: "#8a8aa3" },
+      xiaohongshu: { label: "小紅書",     color: "#ff2442" },
+    };
+    const platformLabel = (p) => (PLATFORMS[p]?.label) || p;
+    const platformColor = (p) => (PLATFORMS[p]?.color) || "#7c5cff";
+
+    // sub_category code → Chinese name lookup (from /api/categories).
+    let CATEGORY_INDEX = {};
+
+    // ── Charts ────────────────────────────────────────────────────
+    Chart.defaults.color = "#8a8aa3";
+    Chart.defaults.borderColor = "#22222f";
+    Chart.defaults.font.family = "-apple-system, 'PingFang HK', 'Microsoft JhengHei', sans-serif";
+
+    function makeChart(id, cfg) {
+      const el = $(id);
+      if (el.__chart) el.__chart.destroy();
+      el.__chart = new Chart(el.getContext("2d"), cfg);
+      return el.__chart;
+    }
+
+    function renderCharts(data) {
+      // Items per platform — vertical bars, one color per platform.
+      const platforms = Object.entries(data.per_platform || {});
+      makeChart("chartPlatforms", {
+        type: "bar",
+        data: {
+          labels: platforms.map(([p]) => platformLabel(p)),
+          datasets: [{
+            data: platforms.map(([, c]) => c),
+            backgroundColor: platforms.map(([p]) => platformColor(p)),
+            borderRadius: 6,
+          }],
+        },
+        options: {
+          indexAxis: "x",
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } },
+        },
+      });
+    }
+
+    // ── Loading helpers ───────────────────────────────────────────
+    async function fetchJSON(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      return res.json();
+    }
+
+    // ── Data loading ──────────────────────────────────────────────
+    async function loadStats() {
+      const s = await fetchJSON("/api/stats");
+      $("kpiTotal").textContent = fmt(s.total);
+      $("kpiCats").textContent = fmt(s.sub_categories_covered);
+      $("kpiDistricts").textContent = fmt(s.districts_covered);
+      $("kpiPlatforms").textContent = fmt(s.platforms);
+
+      const pulse = $("pulse");
+      if (s.last_run) {
+        const when = new Date(s.last_run.started_at).toLocaleString();
+        $("lastRunText").textContent = `Last run: ${when} · status: ${s.last_run.status || "unknown"}`;
+        pulse.classList.remove("off");
+      } else {
+        $("lastRunText").textContent = "Last run: —";
+        pulse.classList.add("off");
+      }
+      renderCharts(s);
+    }
+
+    async function loadDistricts() {
+      const rows = await fetchJSON("/api/districts");
+      const top = rows.slice(0, 15);
+
+      // Horizontal bar chart, top 15 districts.
+      makeChart("chartDistricts", {
+        type: "bar",
+        data: {
+          labels: top.map((r) => r.district).reverse(),
+          datasets: [{
+            data: top.map((r) => r.count).reverse(),
+            backgroundColor: "rgba(124, 92, 255, 0.85)",
+            borderRadius: 5,
+          }],
+        },
+        options: {
+          indexAxis: "y",
+          plugins: { legend: { display: false } },
+          scales: { x: { beginAtZero: true } },
+        },
+      });
+
+      // Populate the district dropdown.
+      const sel = $("fDistrict");
+      const keep = sel.value;
+      sel.innerHTML = '<option value="">All districts</option>' +
+        rows.map((r) => `<option value="${esc(r.district)}">${esc(r.district)} (${fmt(r.count)})</option>`).join("");
+      sel.value = keep || "";
+    }
+
+    async function loadCategories() {
+      const rows = await fetchJSON("/api/categories");
+      CATEGORY_INDEX = {};
+      rows.forEach((r) => { CATEGORY_INDEX[r.sub_category] = r; });
+
+      // Bar chart grouped by the category-group field.
+      const byGroup = {};
+      rows.forEach((r) => {
+        byGroup[r.category] = (byGroup[r.category] || 0) + r.count;
+      });
+      makeChart("chartCategories", {
+        type: "bar",
+        data: {
+          labels: Object.keys(byGroup),
+          datasets: [{
+            data: Object.values(byGroup),
+            backgroundColor: "rgba(124, 92, 255, 0.85)",
+            borderRadius: 6,
+          }],
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } },
+        },
+      });
+
+      // Sub-category dropdown (zh name + code).
+      const sel = $("fCategory");
+      const keep = sel.value;
+      sel.innerHTML = '<option value="">All sub-categories</option>' +
+        rows.map((r) => `<option value="${esc(r.sub_category)}">${esc(r.sub_category)} · ${esc(r.zh_name)}</option>`).join("");
+      sel.value = keep || "";
+    }
+
+    // ── Items table ───────────────────────────────────────────────
+    let state = { offset: 0, total: 0 };
+
+    function scoreClass(s) {
+      if (s == null) return "";
+      if (s >= 0.7) return "hi";
+      if (s >= 0.4) return "mid";
+      return "lo";
+    }
+
+    function renderTable(items) {
+      const tbody = $("tableBody");
+      if (!items.length) {
+        tbody.innerHTML = "";
+        $("tableState").className = "empty";
+        $("tableState").innerHTML = "No content matches the current filters.";
+        return;
+      }
+      $("tableState").className = "";
+      $("tableState").innerHTML = "";
+      tbody.innerHTML = items.map((it) => {
+        const cat = CATEGORY_INDEX[it.sub_category];
+        const thumb = it.thumbnail_url
+          ? `<img class="thumb" src="${esc(it.thumbnail_url)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'thumb ph',textContent:'🎬'}))">`
+          : '<span class="thumb ph">🎬</span>';
+        const title = it.url
+          ? `<a class="item-title" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${esc(it.title)}</a>`
+          : `<span class="item-title">${esc(it.title)}</span>`;
+        return `<tr>
+          <td>${thumb}</td>
+          <td>${title}<div class="item-author">${esc(it.author_name || "—")}</div></td>
+          <td><span class="badge" style="background:${platformColor(it.platform)}22;color:${platformColor(it.platform)}">${esc(platformLabel(it.platform))}</span></td>
+          <td>${esc(it.district || "—")}</td>
+          <td>${esc(cat ? cat.zh_name : it.sub_category)}</td>
+          <td class="num">${fmt(it.view_count)}</td>
+          <td class="num">${fmt(it.like_count)}</td>
+          <td class="num score ${scoreClass(it.score)}">${it.score != null ? Number(it.score).toFixed(2) : "—"}</td>
+          <td class="num muted">${it.fetched_at ? new Date(it.fetched_at).toLocaleString() : "—"}</td>
+        </tr>`;
+      }).join("");
+    }
+
+    async function loadItems() {
+      const params = new URLSearchParams();
+      if ($("fPlatform").value) params.set("platform", $("fPlatform").value);
+      if ($("fDistrict").value) params.set("district", $("fDistrict").value);
+      if ($("fCategory").value) params.set("category", $("fCategory").value);
+      if ($("fQ").value.trim()) params.set("q", $("fQ").value.trim());
+      params.set("limit", $("fLimit").value);
+      params.set("offset", state.offset);
+
+      $("tableState").className = "loading";
+      $("tableState").innerHTML = '<div class="spinner"></div>Loading content…';
+      $("tableBody").innerHTML = "";
+
+      try {
+        const data = await fetchJSON("/api/items?" + params.toString());
+        state.total = data.total;
+        renderTable(data.items);
+
+        const from = state.total ? state.offset + 1 : 0;
+        const to = Math.min(state.offset + data.items.length, state.total);
+        $("pageInfo").textContent = `Showing ${fmt(from)}–${fmt(to)} of ${fmt(state.total)}`;
+        $("btnPrev").disabled = state.offset <= 0;
+        $("btnNext").disabled = state.offset + data.items.length >= state.total;
+      } catch (err) {
+        $("tableState").className = "empty";
+        $("tableState").innerHTML = "Failed to load content: " + esc(err.message);
+      }
+    }
+
+    // ── Wiring ────────────────────────────────────────────────────
+    // "Refresh charts when filters change": any filter change reloads
+    // stats/district/category charts (they reflect the latest crawl data).
+    function onFilterChange() {
+      state.offset = 0;
+      loadStats();
+      loadDistricts();
+      loadCategories();
+      loadItems();
+    }
+
+    ["fPlatform", "fDistrict", "fCategory", "fLimit"].forEach((id) =>
+      $(id).addEventListener("change", onFilterChange));
+
+    let searchTimer;
+    $("fQ").addEventListener("input", () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(onFilterChange, 350);
+    });
+
+    $("btnPrev").addEventListener("click", () => {
+      state.offset = Math.max(0, state.offset - Number($("fLimit").value));
+      loadItems();
+    });
+    $("btnNext").addEventListener("click", () => {
+      state.offset += Number($("fLimit").value);
+      loadItems();
+    });
+
+    // Initial load.
+    (async () => {
+      try {
+        await Promise.all([loadStats(), loadDistricts(), loadCategories(), loadItems()]);
+      } catch (err) {
+        $("tableState").className = "empty";
+        $("tableState").innerHTML = "Failed to reach the dashboard API: " + esc(err.message);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: thingerz-dashboard
+    runtime: python
+    plan: free
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: python api/server.py
+    healthCheckPath: /api/stats
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5
+      - key: PORT
+        value: 8080
