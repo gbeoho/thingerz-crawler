@@ -106,6 +106,14 @@ SUB_CATEGORIES: Dict[str, dict] = {
     "s052": {"category": "community", "zh": "公共參與",       "en": "Public Participation"},
     "s053": {"category": "community", "zh": "社交配對",       "en": "Social Matching"},
     "s054": {"category": "community", "zh": "公眾講座",       "en": "Public Lectures"},
+    # new additions
+    "s055": {"category": "education", "zh": "AI學習",           "en": "AI Learning"},
+    "s056": {"category": "arts",      "zh": "COSPLAY教學",     "en": "Cosplay Teaching"},
+    "s057": {"category": "commercial", "zh": "風水命理",       "en": "Feng Shui & Divination"},
+    "s058": {"category": "performance", "zh": "極限運動",      "en": "Extreme Sports"},
+    "s059": {"category": "performance", "zh": "小丑/氣球藝術", "en": "Clown & Balloon Art"},
+    "s060": {"category": "arts",      "zh": "珠寶設計教學",   "en": "Jewellery Design"},
+    "s061": {"category": "community", "zh": "寵物/動物溝通",   "en": "Pets & Animal Communication"},
 }
 
 # ── 18 Districts of Hong Kong ──────────────────────────────────────────
