@@ -41,8 +41,8 @@ def _format_result(url: str, title: str = "", platform_id: str = "") -> Dict:
 
 
 def _search_via_google_cse(query: str, max_results: int) -> List[Dict]:
-    api_key = os.getenv("GOOGLE_CSE_API_KEY")
-    cx = os.getenv("GOOGLE_CSE_CX")
+    api_key = os.getenv("GOOGLE_CSE_API_KEY") or os.getenv("CUSTOM_GOOGLE_API")
+    cx = os.getenv("GOOGLE_CSE_CX") or os.getenv("CUSTOM_SEARCH_ENGINE_ID")
     if not api_key or not cx:
         return []
 

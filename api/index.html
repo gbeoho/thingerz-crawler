@@ -431,7 +431,7 @@
       tbody.innerHTML = items.map((it) => {
         const cat = CATEGORY_INDEX[it.sub_category];
         const thumb = it.thumbnail_url
-          ? `<img class="thumb" src="${esc(it.thumbnail_url)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'thumb ph',textContent:'🎬'}))">`
+          ? `<img class="thumb" src="/api/thumbnail?url=${encodeURIComponent(it.thumbnail_url)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'thumb ph',textContent:'🎬'}))">`
           : '<span class="thumb ph">🎬</span>';
         const title = it.url
           ? `<a class="item-title" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${esc(it.title)}</a>`

@@ -15,6 +15,7 @@ Then open http://localhost:8080
 import os
 import sqlite3
 import sys
+import urllib.request
 
 from flask import Flask, jsonify, request, send_from_directory
 
@@ -264,6 +265,24 @@ def api_items():
         conn.close()
 
     return jsonify({"total": total, "items": [dict(r) for r in rows]})
+
+
+@app.route("/api/thumbnail")
+def api_thumbnail():
+    """Proxy external thumbnail images, bypassing hotlink protection."""
+    url = request.args.get("url", "")
+    if not url:
+        return "", 400
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            img = resp.read()
+        response = app.response_class(response=img, status=200)
+        response.headers["Content-Type"] = resp.headers.get("Content-Type", "image/jpeg")
+        response.headers["Cache-Control"] = "public, max-age=86400"
+        return response
+    except Exception:
+        return "", 404
 
 
 if __name__ == "__main__":
