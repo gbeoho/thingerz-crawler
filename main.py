@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from config import (
     SUB_CATEGORIES, HK_DISTRICTS, DISTRICT_ALIASES,
+    DISTRICT_KEYWORDS,
     PLATFORMS, MAX_RESULTS_PER_PLATFORM,
     INTENT_KEYWORDS, QUALITY_SIGNALS, CONTENT_BLOCKLIST,
     THINGERZ_API_URL, THINGERZ_API_KEY, LOG_DIR,
@@ -85,6 +86,21 @@ def is_content_blocked(item: Dict) -> bool:
         if keyword in title:
             return True
     return False
+
+
+def matches_district(item: Dict, district: str) -> bool:
+    """
+    Post-filter: does this video actually reference the target district?
+    Checks title/description/author against the district's name and
+    sub-district aliases (handles ambiguous names like 東區/北區/中西區).
+    """
+    keywords = DISTRICT_KEYWORDS.get(district, [district])
+    haystack = " ".join([
+        item.get("title") or "",
+        item.get("description") or "",
+        item.get("author_name") or "",
+    ]).lower()
+    return any(kw.lower() in haystack for kw in keywords)
 
 
 def compute_quality_score(item: Dict) -> float:
@@ -191,6 +207,10 @@ def run_crawl(dry_run: bool = False, max_combos: int = 0, progress_callback=None
                         for item in results:
                             # Block inappropriate content
                             if is_content_blocked(item):
+                                continue
+                            # District post-filter: skip if video doesn't mention
+                            # the target district or its sub-district aliases
+                            if not matches_district(item, district):
                                 continue
                             item["sub_category"] = sub_cat_id
                             item["district"] = district

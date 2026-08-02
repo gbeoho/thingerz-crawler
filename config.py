@@ -118,34 +118,62 @@ HK_DISTRICTS = [
 
 # English aliases for search queries
 DISTRICT_ALIASES = {
-    "中西區": ["Central & Western", "Central and Western"],
-    "東區": ["Eastern District"],
-    "南區": ["Southern District"],
-    "灣仔區": ["Wan Chai"],
-    "九龍城區": ["Kowloon City"],
-    "觀塘區": ["Kwun Tong"],
-    "深水埗區": ["Sham Shui Po"],
-    "黃大仙區": ["Wong Tai Sin"],
-    "油尖旺區": ["Yau Tsim Mong"],
-    "離島區": ["Islands District"],
-    "葵青區": ["Kwai Tsing"],
-    "北區": ["North District"],
-    "西貢區": ["Sai Kung"],
-    "沙田區": ["Sha Tin"],
-    "大埔區": ["Tai Po"],
-    "荃灣區": ["Tsuen Wan"],
-    "屯門區": ["Tuen Mun"],
-    "元朗區": ["Yuen Long"],
+    "中西區": ["Central & Western", "Central and Western", "中環", "上環", "西環"],
+    "東區": ["Eastern District", "筲箕灣", "柴灣", "北角", "太古", "西灣河"],
+    "南區": ["Southern District", "香港仔", "鴨脷洲", "薄扶林"],
+    "灣仔區": ["Wan Chai", "銅鑼灣", "跑馬地"],
+    "九龍城區": ["Kowloon City", "九龍塘", "何文田", "紅磡"],
+    "觀塘區": ["Kwun Tong", "牛頭角", "藍田", "油塘", "官塘"],
+    "深水埗區": ["Sham Shui Po", "長沙灣", "石硤尾"],
+    "黃大仙區": ["Wong Tai Sin", "鑽石山", "慈雲山", "樂富"],
+    "油尖旺區": ["Yau Tsim Mong", "旺角", "尖沙咀", "太子", "油麻地"],
+    "離島區": ["Islands District", "東涌", "大嶼山", "長洲", "南丫島"],
+    "葵青區": ["Kwai Tsing", "葵涌", "青衣"],
+    "北區": ["North District", "上水", "粉嶺", "沙頭角"],
+    "西貢區": ["Sai Kung", "將軍澳", "坑口"],
+    "沙田區": ["Sha Tin", "馬鞍山", "大圍", "火炭"],
+    "大埔區": ["Tai Po", "太和"],
+    "荃灣區": ["Tsuen Wan", "荃景圍"],
+    "屯門區": ["Tuen Mun", "屯門碼頭"],
+    "元朗區": ["Yuen Long", "天水圍", "錦田", "洪水橋"],
+}
+
+# District name/alias check for post-filtering YouTube results.
+# A video only counts for a district if its title/description/author
+# actually mentions the district or one of its sub-district aliases.
+DISTRICT_KEYWORDS = {
+    "中西區": ["中西區", "中環", "上環", "西環", "central", "sheung wan", "sai ying pun"],
+    "東區": ["東區", "筲箕灣", "柴灣", "北角", "太古", "西灣河", "shau kei wan", "chai wan", "north point"],
+    "南區": ["南區", "香港仔", "鴨脷洲", "薄扶林", "aberdeen", "ap lei chau"],
+    "灣仔區": ["灣仔", "銅鑼灣", "跑馬地", "wan chai", "causeway bay", "happy valley"],
+    "九龍城區": ["九龍城", "九龍塘", "何文田", "紅磡", "kowloon city", "kowloon tong", "hung hom"],
+    "觀塘區": ["觀塘", "牛頭角", "藍田", "油塘", "官塘", "kwun tong", "ngau tau kok", "lam tin", "yau tong"],
+    "深水埗區": ["深水埗", "長沙灣", "石硤尾", "sham shui po", "cheung sha wan", "shek kip mei"],
+    "黃大仙區": ["黃大仙", "鑽石山", "慈雲山", "樂富", "wong tai sin", "diamond hill", "tsz wan shan", "lok fu"],
+    "油尖旺區": ["油尖旺", "旺角", "尖沙咀", "太子", "油麻地", "mong kok", "tsim sha tsui", "yau ma tei"],
+    "離島區": ["離島", "東涌", "大嶼山", "長洲", "南丫島", "tung chung", "lantau", "cheung chau", "lamma"],
+    "葵青區": ["葵青", "葵涌", "青衣", "kwai tsing", "kwai chung", "tsing yi"],
+    "北區": ["北區", "上水", "粉嶺", "沙頭角", "sheung shui", "fanling", "sha tau kok"],
+    "西貢區": ["西貢", "將軍澳", "坑口", "sai kung", "tseung kwan o", "hang hau"],
+    "沙田區": ["沙田", "馬鞍山", "大圍", "火炭", "sha tin", "ma on shan", "tai wai", "fo tan"],
+    "大埔區": ["大埔", "太和", "tai po", "tai wo"],
+    "荃灣區": ["荃灣", "荃景圍", "tsuen wan", "tsuen king circuit"],
+    "屯門區": ["屯門", "屯門碼頭", "tuen mun", "tuen mun pier"],
+    "元朗區": ["元朗", "天水圍", "錦田", "洪水橋", "yuen long", "tin shui wai", "kam tin", "hung shui kiu"],
 }
 
 # ── Platforms ──────────────────────────────────────────────────────────
+# Only YouTube is enabled — other platforms (IG/Threads/Douyin/XHS/Bilibili)
+# produce stub records without real district-relevant results (no API keys),
+# and Bilibili has ~1% district match rate with politics/sex contamination.
+# Re-enable a platform only after real search APIs are configured.
 PLATFORMS = {
     "youtube":     {"name_zh": "YouTube",     "enabled": True, "rate_per_min": 10},
-    "instagram":   {"name_zh": "Instagram",   "enabled": True, "rate_per_min": 5},
-    "douyin":      {"name_zh": "抖音/TikTok",  "enabled": True, "rate_per_min": 5},
-    "threads":     {"name_zh": "Threads",     "enabled": True, "rate_per_min": 10},
-    "xiaohongshu": {"name_zh": "小紅書",       "enabled": True, "rate_per_min": 5},
-    "bilibili":    {"name_zh": "Bilibili",    "enabled": True, "rate_per_min": 30},
+    "instagram":   {"name_zh": "Instagram",   "enabled": False, "rate_per_min": 5},
+    "douyin":      {"name_zh": "抖音/TikTok",  "enabled": False, "rate_per_min": 5},
+    "threads":     {"name_zh": "Threads",     "enabled": False, "rate_per_min": 10},
+    "xiaohongshu": {"name_zh": "小紅書",       "enabled": False, "rate_per_min": 5},
+    "bilibili":    {"name_zh": "Bilibili",    "enabled": False, "rate_per_min": 30},
 }
 
 # ── Cron ───────────────────────────────────────────────────────────────
