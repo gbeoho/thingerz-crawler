@@ -277,6 +277,27 @@ CONTENT_BLOCKLIST = [
     "革命", "推翻中共", "独裁", "民运", "反华",
     "白纸运动", "自由花", "镇压", "屠城", "集中营",
     "武汉肺炎", "新冠源头中国", "中必输",
+    # Politics: HK / TW / CN figures, institutions, elections, protests (high-precision)
+    "李家超", "特首", "行政长官", "施政报告", "立法会", "区议会", "选委",
+    "两会", "人大", "政协", "港区国安法", "国安法", "一国两制", "基本法",
+    "中联办", "港澳办", "庆回归", "爱国者治港", "公民科",
+    "陈玉珍", "民进党", "立法院", "赖清德", "蔡英文", "柯文哲", "侯友宜", "台湾政治",
+    "离岛建设条例", "统战", "立委", "选罢法",
+    "区议员", "区议员抗議", "议员抗议", "请愿", "集会", "罢工", "绝食",
+    "新疆集中营", "维吾尔", "世维", "天安门", "反送中", "占中",
+    # Politics: English unambiguous
+    "carrie lam", "john lee", "legislative council", "legco", "vote tomorrow",
+    "chief executive visit", "protests continue", "hongkongers rally", "national security program",
+    # Unsuitable: crime / trafficking / fear content (esp. children's categories)
+    "人贩子", "拐卖", "贩卖人口", "失踪男孩", "虐童", "儿童色情",
+    # ... traditional-Chinese variants (HK search returns traditional)
+    "人販子", "拐賣", "販賣人口", "失蹤男孩", "虐童", "兒童色情",
+    "區議員", "立法會", "區議會", "選舉", "政黨", "特首", "行政長官", "施政報告",
+    "李家超", "陳玉珍", "民進黨", "立法院", "賴清德", "蔡英文", "柯文哲", "侯友宜",
+    "一國兩制", "基本法", "港區國安法", "國安法", "愛國者治港", "中聯辦", "港澳辦", "慶回歸",
+    "抗議", "示威", "遊行", "請願", "集會", "絕食", "佔中", "反送中",
+    "兩會", "人大", "政協", "天安門", "六四", "法輪功", "新疆", "維吾爾", "世維", "集中營",
+    "台湾政治", "台灣政治", "統戰", "台獨",
     # Sex / adult (avoid broad matches like "AV" which hits "have", "travel", etc.)
     "自慰", "手淫", "性爱", "做爱", "色情", "A片", "黄片", "成人内容",
     "站街", "嫖娼", "卖淫", "扫黄",
