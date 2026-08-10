@@ -114,6 +114,9 @@ SUB_CATEGORIES: Dict[str, dict] = {
     "s059": {"category": "performance", "zh": "小丑/氣球藝術", "en": "Clown & Balloon Art"},
     "s060": {"category": "arts",      "zh": "珠寶設計教學",   "en": "Jewellery Design"},
     "s061": {"category": "community", "zh": "寵物/動物溝通",   "en": "Pets & Animal Communication"},
+    "s062": {"category": "education", "zh": "音響設備及教學", "en": "Audio Equipment & Teaching"},
+    "s063": {"category": "commercial", "zh": "汽車維修及裝置", "en": "Car Repair & Installation"},
+    "s064": {"category": "food", "zh": "燒賣腸粉關注組", "en": "Siu Mai & Cheong Fun Focus"},
 }
 
 # ── 18 Districts of Hong Kong ──────────────────────────────────────────
@@ -255,6 +258,18 @@ INTENT_KEYWORDS = {
     "s052": ["公共參與 活動", "public participation", "社區 參與 講座"],
     "s053": ["社交配對 活動", "social matching", "交友 活動 分享"],
     "s054": ["公眾講座 分享", "public lecture", "講座 教學 分享"],
+    # ── newer sub-categories ──
+    "s055": ["AI學習 香港", "人工智能 教學"],
+    "s056": ["COSPLAY教學", "角色扮演 教學"],
+    "s057": ["風水命理", "風水 師傅"],
+    "s058": ["重氧運動", "HYROX", "功能性訓練"],
+    "s059": ["小丑 表演", "氣球藝術"],
+    "s060": ["珠寶設計教學", "首飾設計"],
+    "s061": ["寵物溝通", "動物傳心"],
+    # ── s062-064 (2026-08-10 additions) ──
+    "s062": ["音響 教學 器材", "hifi 音響 分享", "喇叭 耳機 評測", "音響 課程 導師"],
+    "s063": ["汽車維修 教學", "汽車保養 示範", "汽車改裝 教學", "車房 維修 分享"],
+    "s064": ["燒賣 關注組", "腸粉 關注組", "燒賣 掃街 食評", "腸粉 製作 教學"],
 }
 
 # Quality signals — if title/description contains these, content likely shows real standard
@@ -311,8 +326,13 @@ CONTENT_BLOCKLIST = [
     "milf", "horny", "boobs", "blowjob", "bdsm",
     "阴道", "阴茎", "生殖器", "精液", "射精", "勃起", "奶子",
     # Garbage / spam
-    "暗访一条街",
-    "异性交流圈",
+    "暗访一条街", "异性交流圈",
+    # Web-dramas / 短劇 (clear drama markers only — NOT part-numbers, which appear in legit tutorials)
+    "短劇", "短剧", "爽剧", "免费短剧", "逆袭", "赘婿", "战神归来",
+    "修仙小说", "都市修仙", "玄幻小说", "穿越重生", "穿越之", "穿越回", "穿越到",
+    "三炷香", "時空門", "时空之门",
+    # Celebrity gossip / tabloid (specific named-gossip channels, not generic 八卦)
+    "李泳漢", "李泳汉", "施明", "娛樂新聞", "藝人動態", "明星動態", "狗仔隊",
     # Violent / disturbing
     "杀人", "碎尸",
 ]
