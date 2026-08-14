@@ -117,6 +117,14 @@ SUB_CATEGORIES: Dict[str, dict] = {
     "s062": {"category": "education", "zh": "音響設備及教學", "en": "Audio Equipment & Teaching"},
     "s063": {"category": "commercial", "zh": "汽車維修及裝置", "en": "Car Repair & Installation"},
     "s064": {"category": "food", "zh": "燒賣腸粉關注組", "en": "Siu Mai & Cheong Fun Focus"},
+    # ── s065-071 (2026-08-14 additions, full 71-sub site taxonomy) ──
+    "s065": {"category": "education", "zh": "身心靈提升", "en": "Mind Body & Spirit"},
+    "s066": {"category": "arts",      "zh": "手錶設計及維修", "en": "Watch Design & Repair"},
+    "s067": {"category": "arts",      "zh": "動漫及動畫", "en": "Anime & Animation"},
+    "s068": {"category": "community", "zh": "玩具(四驅車,陀螺)", "en": "Toys (Mini-4WD & Beyblade)"},
+    "s069": {"category": "wedding",   "zh": "生活小配件", "en": "Lifestyle Accessories"},
+    "s070": {"category": "education", "zh": "體育運動教學", "en": "Sports & Coaching"},
+    "s071": {"category": "performance", "zh": "ASMR音效", "en": "ASMR Sound Effects"},
 }
 
 # ── 18 Districts of Hong Kong ──────────────────────────────────────────
@@ -274,6 +282,14 @@ INTENT_KEYWORDS = {
              "香港高級視聽展 2026", "音響展 現場"],
     "s063": ["汽車維修 教學", "汽車保養 示範", "汽車改裝 教學", "車房 維修 分享"],
     "s064": ["燒賣 關注組", "腸粉 關注組", "燒賣 掃街 食評", "腸粉 製作 教學"],
+    # ── s065-071 (2026-08-14 additions) ──
+    "s065": ["身心靈 課程 香港", "冥想 教學", "靈性 成長 分享", "禪修 工作坊"],
+    "s066": ["手錶 維修 教學", "腕錶 保養 師傅", "鐘錶 維修 分享", "手錶 改裝 教學"],
+    "s067": ["動漫 介紹 香港", "動畫 製作 教學", "動漫 周邊 開箱", "配音 動畫 分享"],
+    "s068": ["四驅車 教學", "陀螺 對戰 教學", "玩具 開箱 分享", "模型 製作 教學"],
+    "s069": ["生活小配件 開箱", "實用 小物 香港", "生活 好物 介紹", "配件 收納 教學"],
+    "s070": ["體育 訓練 教學 香港", "健身 教練 課程", "運動 教學 示範", "球類 訓練 教學"],
+    "s071": ["ASMR 音效", "ASMR 製作 教學", "舒壓 音效 分享"],
 }
 
 # Quality signals — if title/description contains these, content likely shows real standard
