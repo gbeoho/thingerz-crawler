@@ -125,7 +125,7 @@ SUB_CATEGORIES: Dict[str, dict] = {
     "s069": {"category": "wedding",   "zh": "生活小配件", "en": "Lifestyle Accessories"},
     "s070": {"category": "education", "zh": "體育運動教學", "en": "Sports & Coaching"},
     "s071": {"category": "performance", "zh": "ASMR音效", "en": "ASMR Sound Effects"},
-    "s072": {"category": "commercial", "zh": "空間/打卡場地", "en": "HK Spaces & Photo Spots"},
+    "s072": {"category": "performance", "zh": "空間/打卡場地", "en": "HK Spaces & Photo Spots"},
 }
 
 # ── 18 Districts of Hong Kong ──────────────────────────────────────────
