@@ -28,6 +28,7 @@ from config import (
     DISTRICT_KEYWORDS,
     PLATFORMS, MAX_RESULTS_PER_PLATFORM,
     INTENT_KEYWORDS, QUALITY_SIGNALS, CONTENT_BLOCKLIST,
+    FOOD_SUBCATEGORIES, FOOD_SIGNALS,
     THINGERZ_API_URL, THINGERZ_API_KEY, LOG_DIR,
 )
 from search import search_platform, _load_searchers
@@ -120,6 +121,16 @@ def compute_quality_score(item: Dict) -> float:
         if signal in title or signal in title_lower:
             signal_count += 1
     score += min(0.4, signal_count * 0.08)  # up to +0.4 for quality signals
+
+    # Food-review sub-categories: add a review/showcase signal (食評/探店/美食...)
+    # so local HK restaurant reviews & food tours pass the quality bar, since
+    # QUALITY_SIGNALS above is teaching-focused and misses this content type.
+    sc = item.get("sub_category") or ""
+    if sc in FOOD_SUBCATEGORIES:
+        food_signals = sum(1 for s in FOOD_SIGNALS
+                           if s in title or s in title_lower)
+        boost = min(0.25, food_signals * 0.08)  # up to +0.25 extra for food content
+        score += boost
 
     # Boost for view count (popular content is more likely to be quality)
     views = item.get("view_count", 0) or 0

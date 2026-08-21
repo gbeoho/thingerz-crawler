@@ -300,6 +300,17 @@ QUALITY_SIGNALS = [
     "tips", "技巧", "方法", "入門", "進階", "初學",
 ]
 
+# Food-review sub-categories whose "quality" is a review/tasting/showcase rather
+# than a tutorial. For these we allow an additional food-content signal so that
+# local HK restaurant reviews / street-food tours / 探店 actually pass the bar
+# (previously they all scored LOW because QUALITY_SIGNALS is teaching-focused).
+FOOD_SUBCATEGORIES = {"s007", "s030", "s031", "s032", "s035"}
+FOOD_SIGNALS = [
+    "食評", "探店", "美食", "吃貨", "飲食", "餐廳", "食記",
+    "review", "食咩", "食乜", "推薦", "攻略", "抵食", "好食",
+    "菜單", "品嚐", "tasting", "food tour", "foodie",
+]
+
 # Content blocklist — remove politics, sex, and inappropriate content
 CONTENT_BLOCKLIST = [
     # Politics / sensitive
