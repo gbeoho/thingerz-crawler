@@ -126,6 +126,7 @@ SUB_CATEGORIES: Dict[str, dict] = {
     "s070": {"category": "education", "zh": "體育運動教學", "en": "Sports & Coaching"},
     "s071": {"category": "performance", "zh": "ASMR音效", "en": "ASMR Sound Effects"},
     "s075": {"category": "performance", "zh": "空間/打卡場地", "en": "HK Spaces & Photo Spots"},
+    "s076": {"category": "arts", "zh": "Roblox Studio 遊戲製作", "en": "Roblox Studio Game Making"},
 }
 
 # ── 18 Districts of Hong Kong ──────────────────────────────────────────
@@ -292,6 +293,7 @@ INTENT_KEYWORDS = {
     "s070": ["體育 訓練 教學 香港", "健身 教練 課程", "運動 教學 示範", "球類 訓練 教學"],
     "s071": ["ASMR 音效", "ASMR 製作 教學", "舒壓 音效 分享"],
     "s075": ["香港 打卡 場地", "特色空間 開箱", "空間 導覽 香港", "場地 介紹 攻略", "香港 景點 打卡位"],
+    "s076": ["Roblox Studio 教學", "Roblox 遊戲製作", "Roblox 遊戲開發", "Roblox Studio 遊戲", "Roblox 製作 教程"],
 }
 
 # Quality signals — if title/description contains these, content likely shows real standard
